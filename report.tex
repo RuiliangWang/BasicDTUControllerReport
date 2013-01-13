@@ -1,0 +1,47 @@
+%====================================================================
+% 10 MW LIGHT ROTOR REFERENCE TURBINE - MAIN DOCUMENT
+%====================================================================
+
+\documentclass[
+paper=a4,
+fontsize=11pt,
+parskip=half,        % vertical inter-paragraph spacing instead of indentation
+DIV=12,              % "stripes" for layout definition
+BCOR=10mm,           % binding correction
+headings=normal,
+appendixprefix=true, % Put "Appendix A" at the beginning...
+open=any             % New chapter may begin on any page
+]{scrbook}
+
+\usepackage[utf8]{inputenc}
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{amsmath}
+%\usepackage{draftwatermark}
+%\SetWatermarkScale{2}
+\usepackage{siunitx}
+\usepackage{url}
+\urlstyle{sf}
+\usepackage{rotating}
+\usepackage[numbers,square]{natbib}
+\bibliographystyle{unsrtnat}
+\setcounter{page}{2}  % Page one is added manually, start counting at 2.
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\manualmark
+
+\ifoot[DTU Wind Energy E-0018]{DTU Wind Energy E-0018}
+
+
+\begin{document}
+    \include{frontpage}
+%    \include{foreword}
+    \tableofcontents
+%    \include{summary}
+    \include{description}
+%       \include{tuning}
+    \include{bibliography}
+    \include{appendix}
+%    \include{acknowledgements}
+\end{document}
+

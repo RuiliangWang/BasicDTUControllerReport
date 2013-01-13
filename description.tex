@@ -1,0 +1,349 @@
+\chapter{Controller description} \label{cha:description}
+
+This chapter contains a description of the controller strategy, architecture, filters, parameters, and in-/outputs. The controller is a further development of a previous controller used at DTU Wind Energy under the version number 11. The new developments are inspired by E. Bossanyi's controller for the 5MW NREL reference turbine \cite{Bossanyi09}, where the inclusion of a power error feedback in the pitch controller to keep the pitch at its minimum below rated power operation is the most significant.
+
+The controller is only considering low speed shaft (LSS) measures of rotational speeds and torques, i.e., there is no gearbox on the drivetrain. The controller still be used for turbines with a gearbox, when the user transforms torques and speeds between the LSS and HSS using the gear ratio.
+
+\section{Strategy and architecture}
+
+A diagram of the entire controller is shown in Figure~\ref{f:diagram}. The routes of this diagram that are active when the turbine is operating below rated power, herein called \emph{partial load} operation, are shown in Figure~\ref{f:diagram_part}. The routes that are active in \emph{full load} operation are shown in Figure~\ref{f:diagram_full}. These two regions of operation are first described before the switching between is explained.
+
+\subsection{Partial load operation}
+
+The strategy for optimal $C_P$ tracking in partial load operation is based on a balance between generator and aerodynamic torques to obtain a close to optimal tip speed ratio. To avoid the feedback of higher frequency dynamics (e.g. the drivetrain torsion mode), the torque reference $Q{ref,k}$ at the current step $k$ is computed based on a second order low-pass filtered LSS generator speed as $K \bar \Omega_k$. This feedback is enforced by setting the torque limits for the PID controller to $Q_{g,min,k}=Q_{g,max,k}=K\bar \Omega_k$ whenever the filtered rotational speed $\bar \Omega_k$ is not close to the minimum speed $\Omega_{min}$, or the rated speed $\Omega_0$. When the rotational speed is close to its bounds, these torque limits will open according to the interpolation factors $\sigma_{min,k}$ and $\sigma_{max,k}$. The torque reference will then be given by the PID controller based on the speed error $e_{Q,k}=\bar\Omega_k -\Omega_{set,k}$, where the set point is the minimum, or rated speed. Because the rotor speed is bounded, the power loss can often be minimized be performing some adjustment of the minimum pitch. A first order low-pass filtered wind speed measured at hub height $\bar V_k$ is used as parameter for varying the minimum pitch angle $\theta_{min,k}=\theta_{min}(\bar V_k)$ based on a look-up table provided by the user. The power error feedback of pitch PID controller ensures that the pitch reference is kept at this minimum pitch angle.
+
+\begin{sidewaysfigure}
+\centerline{\epsfig{figure=discrete_diagram.eps,width=1.05\textheight} }
+\caption{Diagram of the discrete controller. Note that $k$ denotes the current time step. \label{f:diagram}}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}
+\centerline{\epsfig{figure=discrete_diagram_part.eps,width=1.05\textheight} }
+\caption{Active routes during partial load operation in the controller diagram in Figure~\ref{f:diagram}. \label{f:diagram_part}}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}
+\centerline{\epsfig{figure=discrete_diagram_full.eps,width=1.05\textheight} }
+\caption{Active routes during full load operation in the controller diagram in Figure~\ref{f:diagram}. \label{f:diagram_full}}
+\end{sidewaysfigure}
+
+The interpolation factors for the opening of the torque limits are based on how close the second order low-pass filtered generator speed is from its minimum and rated speeds. The limits can be opened gradually over an interval as described by the function 
+\begin{equation}\label{e:sigma}
+\sigma\left(x_0,x_1;x\right) = \left\{ 
+\begin{array}{rl}
+0 & \forall x<x_0 \\
+a_3x^3 + a_2x^2 + a_1x + a_0& \forall x\in[x_0:x_1[\\
+1 & \mbox{otherwise}
+\end{array} \right.
+\end{equation}
+where the coefficients of the spline are
+\begin{equation}\label{e:sigmacoef}
+a_3=\frac{2}{\left(x_0-x_1\right)^3}, \;\;\;\;
+a_2=\frac{-3 \left(x_0+x_1\right)}{\left(x_0-x_1\right)^3}, \;\;\;\;
+a_1=\frac{6 x_1 x_0}{\left(x_0-x_1\right)^3}, \;\;\;\;
+a_0=\frac{\left(x_0-3 x_1\right) x_0^2}{\left(x_0-x_1\right)^3}
+\end{equation}
+The function is programmed such that if $x_0 \geq x_1$ then the $\sigma$-function becomes 
+\begin{equation}\label{e:sigma_if}
+\sigma\left(x_0,x_0;x\right) = \left\{
+\begin{array}{rl}
+0 & \forall x<x_0 \\
+1 & \mbox{otherwise} 
+\end{array} \right.
+\end{equation}
+Figure~\ref{f:sigma} shows an example of the $\sigma$-function where $x_0=1$ and $x_1=2$. Figure~\ref{f:torque_limits} shows the torque limits in partial load operation of the DTU 10~MW RWT, where the minimum speed is 7~rpm and rated speed is 9.6~rpm. The limits are set to be closed approximately 5~\% above the minimum speed and start opening again at 90~\% and are fully open at 95~\% of the rated speed.
+
+\begin{figure}[b!]
+\centerline{\epsfig{figure=sigma.eps,width=0.45\textheight} }
+\caption{Example of the $\sigma$-function \eqref{e:sigma} where $x_0=1$ and $x_1=2$. \label{f:sigma}}
+\end{figure}
+
+\begin{figure}[t]
+\centerline{\epsfig{figure=torque_limits.eps,width=0.55\textheight} }
+\caption{Torque limits in partial load operation of the DTU 10~MW RWT, where the minimum speed is 7~rpm and rated speed is 9.6~rpm. The limits are set to be closed approximately 5~\% above the minimum speed and start opening again at 90~\% and are fully open at 95~\% of the rated speed. \label{f:torque_limits}}
+\end{figure}
+
+\subsection{Full load operation}
+
+In full load operation, the torque limits are 
+
+
+\subsection{Switching between partial and full load operation}
+
+The switching between partial and full load control of the generator torque is based on a first order low-pass filtered switching variable $\sigma_{\theta,k}$ that is driven by a $\sigma$-function evaluation using the measured mean pitch angle $\theta_m$. The time constant is the rotational period at rated speed. When 
+
+
+
+
+\subsection{Drivetrain damper}
+
+
+
+
+
+\section{Filters}
+
+The discrete filters used in the controller 
+
+
+\begin{equation}
+\label{e:f1}
+f_1 \left(\tau; \bar x_{k-1} , x_{k} , x_{k-1} \right) = a_1 \bar x_{k-1} + b_0 x_k + b_1 x_{k-1}
+\end{equation}
+where
+\begin{equation}
+\label{e:f1coef}
+a_1=\frac {2\tau-\Delta t}{2\tau+\Delta t} , \;\;\;\; b_0 = \frac {\Delta t}{2\tau+\Delta t}, \;\;\;\; b_1 = b_0
+\end{equation}
+
+
+\begin{equation}
+\label{e:f2}
+f_2 \left(\zeta, \omega; \bar x_{k-1} , \bar x_{k-2} , x_{k} , x_{k-1} , x_{k-2} \right) = a_1 \bar x_{k-1} + a_2 \bar x_{k-2} + b_0 x_k + b_1 x_{k-1}+ b_2 x_{k-2}
+\end{equation}
+where
+\begin{gather}\nonumber
+a_1=\frac {6-\omega^2 \Delta t^2}{d},
+\;\;\;\;
+a_2=\frac {-3+3\,\zeta\,\omega\,\Delta t-\omega^2\Delta t^2}{d}, \\
+\label{e:f2coef}
+b_0= \frac {\omega^2\Delta t^2}{d}, \;\;\;\; b_1 = b_0\;\;\;\; b_2 = b_0
+\end{gather}
+where the common denominator is $d=3+3 \zeta \omega \Delta t+\omega^2 \Delta t^2$.
+
+\begin{equation}
+\label{e:fn}
+f_n \left(\zeta_{1}, \zeta_{2}, \omega; \bar x_{k-1} , \bar x_{k-2} , x_{k} , x_{k-1} , x_{k-2} \right) = a_1 \bar x_{k-1} + a_2 \bar x_{k-2} + b_0 x_k + b_1 x_{k-1}+ b_2 x_{k-2}
+\end{equation}
+where
+\begin{gather}\nonumber
+a_1=-{\frac {-6+{\omega}^{2}{\Delta t}^{2}}{d}},
+\;\;\;\;
+a_2=-{\frac {3-3\,\zeta_{1}\,\omega\,\Delta t+{\omega}^{2}{\Delta t}^{2}}{d}}, \\
+\label{e:fncoef}
+b_0 = {\frac {3+3\,\zeta_{2}\,\omega\,\Delta t+{\omega}^{2}{\Delta t}^{2}}{d}}, \;\;\;\; 
+b_1 = -a_1,\;\;\;\; 
+b_2 = {\frac {3-3\,\zeta_{2}\,\omega\,\Delta t+{\omega}^{2}{\Delta t}^{2}}{d}}
+\end{gather}
+where the common denominator is $d=3+3\,\zeta_{1}\,\omega\,\Delta t+{\omega}^{2}{\Delta t}^{2}$.
+
+
+\begin{equation}
+\label{e:fp}
+f_p \left(\zeta \omega; \bar x_{k-1} , \bar x_{k-2} , x_{k} , x_{k-1} , x_{k-2} \right) = a_1 \bar x_{k-1} + a_2 \bar x_{k-2} + b_0 x_k + b_1 x_{k-1}+ b_2 x_{k-2}
+\end{equation}
+where
+\begin{gather}\nonumber
+a_1 = -{\frac {-9-3\,\zeta\,\omega\,{\it dt}+d}{d}},\;\;\;\;
+a_2 =-{\frac {-6\,\zeta\,\omega\,{\it dt}+d}{d}}, \\
+\label{e:fpcoef}
+b_0 =3\,{\frac {\zeta\,\omega\, \left( {\it dt}+2\,\tau \right) }{d}} ,\;\;\;\; 
+b_1 =-12\,{\frac {\zeta\,\omega\,\tau}{d}} ,\;\;\;\; 
+b_2 =-3\,{\frac {\zeta\,\omega\, \left( {\it dt}-2\,\tau \right) }{d}} 
+\end{gather}
+where the common denominator is $d=3+3 \zeta \omega \Delta t+\omega^2 \Delta t^2$. The parameter $\tau$ is hardcoded to zero in the implementation of this band-pass filter, and it is therefore not included in the list of parameters in the function call.
+
+
+
+\section{Parameters}
+
+All parameters of the controller are transferred to the DLL using HAWC2 commands for the ``init'' routine of the type2 DLL interface \cite{Larsen12}. Table~\ref{t:init} shows the command list from the input to the DTU 10MW RWT, and some more details of all 38 parameters are given in Table~\ref{t:par}, where the parameters used in the diagram of Figure~\ref{f:diagram} also can be seen.
+
+\begin{table}[b]
+\begin{center}
+\scriptsize
+\begin{verbatim}
+; Overall parameters
+constant   1 10000.0  ; Rated power [kW]
+constant   2   0.733  ; Minimum rotor speed [rad/s]
+constant   3   1.005  ; Rated rotor speed [rad/s]
+constant   4  15.6e6  ; Maximum allowable generator torque [Nm]
+constant   5 100.0    ; Minimum pitch angle, theta_min [deg],
+                      ; if |theta_min|>90, then a table of <wsp,theta_min> is read
+                      ; from a file named 'wptable.n', where n=int(theta_min)
+constant   6  90.0    ; Maximum pitch angle [deg]
+constant   7  10.0    ; Maximum pitch velocity operation [deg/s]
+constant   8   0.15   ; Frequency of generator speed filter [Hz]
+constant   9   0.7    ; Damping ratio of speed filter [-]
+constant  10   0.625  ; Frequency of free-free DT torsion mode [Hz], if zero no notch filter used
+; Partial load control parameters
+constant  11   9.54e6 ; Optimal Cp tracking K factor [kNm/(rad/s)^2], ;
+                      ; Qg=K*Omega^2, K=eta*0.5*rho*A*Cp_opt*R^3/lambda_opt^3
+constant  12   6.98e7 ; Proportional gain of torque controller [Nm/(rad/s)]
+constant  13   1.46e7 ; Integral gain of torque controller [Nm/rad]
+constant  14   0.0    ; Differential gain of torque controller [Nm/(rad/s^2)]
+; Full load control parameters
+constant  15   1      ; Generator control switch [1=constant power, 2=constant torque]
+constant  16   1.142  ; Proportional gain of pitch controller [rad/(rad/s)]
+constant  17   0.1509 ; Integral gain of pitch controller [rad/rad]
+constant  18   0.0    ; Differential gain of pitch controller [rad/(rad/s^2)]
+constant  19   0.4e-8 ; Proportional power error gain [rad/W]
+constant  20   0.4e-8 ; Integral power error gain [rad/(Ws)]
+constant  21   7.5133 ; Coefficient of linear term in aerodynamic gain scheduling, KK1 [deg]
+constant  22 708.1333 ; Coefficient of quadratic term in aerodynamic gain scheduling, KK2 [deg^2]
+                      ; (if zero, KK1 = pitch angle at double gain)
+constant  23   1.3    ; Relative speed for double nonlinear gain [-]
+; Cut-in simulation parameters
+constant  24   0.1    ; Cut-in time [s]
+constant  25   4.0    ; Time delay for soft start of torque [1/1P]
+; Cut-out simulation parameters
+constant  26   710    ; Cut-out time [s]
+constant  27   5.0    ; Time constant for 1st order filter lag of torque cut-out [s]
+constant  28   1      ; Stop type [1=linear two pitch speed stop, 2=exponential pitch speed stop]
+constant  29   1.0    ; Time delay for pitch stop 1 [s]
+constant  30  20.0    ; Maximum pitch velocity during stop 1 [deg/s]
+constant  31   1.0    ; Time delay for pitch stop 2 [s]
+constant  32  10.0    ; Maximum pitch velocity during stop 2 [deg/s]
+; Expert parameters (keep default values unless otherwise given)
+constant  33   0.5    ; Lower angle above lowest minimum pitch angle for switch [deg]
+constant  34   0.5    ; Upper angle above lowest minimum pitch angle for switch [deg]
+constant  35  95.0    ; Ratio between filtered and reference speed for fully open torque limits [%]
+constant  36   5.0    ; Time constant of 1st order filter on wind speed for minimum pitch [1/1P]
+constant  37   5.0    ; Time constant of 1st order filter on pitch angle for gain scheduling [1/1P]
+; Drivetrain damper
+constant  38   0.0    ; Proportional gain of DT damper [Nm/(rad/s)], requires frequency in input 10
+\end{verbatim}
+\caption{All parameters of the controller, here shown as the HAWC2 input commands for the ``init'' routine of the controller, see type2 DLL interface description in the HAWC2 manual. The shown values are taken from the input to the DTU 10MW RWT. \label{t:init}}
+\end{center}
+\end{table}
+
+
+\begin{table}[b]
+\begin{center}
+\begin{tabular}{r|c|p{11.5cm}}
+Input &  & Additional explanation if assumed needed \\ \hline
+1 & $P_0$ & Rated power [kW].\\
+2 & $\Omega_{min}$ & Minimum rotor speed [rad/s].\\
+3 & $\Omega_0$ & Rated rotor speed [rad/s]. \\
+4 & -& Maximum allowable generator torque [Nm]. An upper limit set on the torque reference signal. \\
+5 & -& This number is the minimum pitch angle $\theta_{min}$ in degrees, which is set to a constant if this input is less than 90~deg. Otherwise, the init routine will search for a file with the name ``wptable.n'', where ``n'' is a character string obtained from the integer value of the input. In the shown example, this file is therefore ``wptable.100''. The file format is first line contains an integer with the number of subsequent lines, which contain two numbers each, wind speed and minimum pitch angle in degrees. An example is shown in Table~\ref{t:wptable}.\\
+6 & -& Maximum pitch angle [deg]. \\
+7 & -& Maximum pitch velocity operation [deg/s]. An upper limit set on the rate of change of the pitch reference signal.\\
+8 & $\omega_{\Omega}$ & Frequency of generator speed filter [Hz]. \\
+9 & $\zeta_{\Omega}$ & Damping ratio of speed filter [-]. \\
+10 & $\omega_n$ & Frequency of free-free DT torsion mode [Hz], if zero no notch filter used. \\
+11 & $K$ & Optimal $C_P$ tracking factor [Nm/(rad/s)$^2$], $K=\eta \frac12 \rho A C_{P,opt} R^3/\lambda_{opt}^3$. \\
+12 & $k_P^g$ & Proportional gain of torque controller [Nm/(rad/s)]. \\
+13 & $k_I^g$ & Integral gain of torque controller [Nm/rad]. \\
+14 & $k_D^g$ & Differential gain of torque controller [Nm/(rad/s$^2$)]. \\
+15 & -& Generator control strategy [1=constant power, 2=constant torque]. \\
+16 & $k_P$ & Proportional gain of pitch controller [rad/(rad/s)]. \\
+17 & $k_I$ & Integral gain of pitch controller [rad/rad].\\
+18 & $k_D$ & Differential gain of pitch controller [rad/(rad/s$^2$)]. \\
+19 & $k_P^P$ & Proportional power error gain [rad/W]. \\
+20 & $k_I^P$ &Integral power error gain [rad/(Ws)]. \\
+21 & $K_1$ & Coefficient of linear term in aerodynamic gain scheduling [deg]. \\
+22 & $K_2$ & Coefficient of quadratic term in aerodynamic gain scheduling [deg$^2$]. If this factor $K_2$ is set to zero then the controller will assumed a linear gain scheduling. The $K_1$ is then the pitch angle where the aerodynamic torque gain has doubled from its value at zero pitch.\\
+23 & $\Omega_2/\Omega_0$ & Normalized speed where the pitch controller gains are doubled.\\
+24 & -& Cut-in time [s], if zero no cut-in simulated. \\
+25 & -& A time delay for the cut-in procedure given in the unit [1/1P] corresponding to the rotational period at rated speed.\\
+26 & -& Cut-out time [s], if zero no cut-out simulated. \\
+27 & -& Time constant for 1st order filter lag of torque cut-out [s]. \\
+28 & -& Stop type [1=linear two pitch speed stop, 2=exponential pitch speed stop] as described in Section~\ref{s:cutout}. \\
+29 & -& Time delay for pitch stop 1 [s]. \\
+30 & -& Maximum pitch velocity during stop 1 [deg/s]. \\
+31 & -& Time delay for pitch stop 2 [s].\\
+32 & -& Maximum pitch velocity during stop 2 [deg/s].
+\end{tabular}
+\end{center}
+\end{table}
+\begin{table}[b]
+\begin{center}
+\begin{tabular}{r|c|p{11.5cm}}
+Input &  & Additional explanation if assumed needed \\ \hline
+33 & $\theta_{f_0}$ & Lower angle above lowest minimum pitch angle for switch [deg]. \\
+34 & $\theta_{f_1}$ & Upper angle above lowest minimum pitch angle for switch [deg]. \\
+35 & $\gamma$ & Percentage of the rated speed when the torque limits are fully opened $\Omega_{max_2}=\gamma\Omega_0$ to let PID controller be active, and the opening starts at $\Omega_{min_2}=(2 \gamma -1)\Omega_0$. The same percentage is used for opening the torque limits for PID control around the minimum rotational speed, where the torque limits start to open at $\Omega_{max_1}=\Omega_{min}/\gamma$ and fully open at $\Omega_{min_1}=\Omega_{min}$. \\
+36 & $\tau_V \Omega_0 /(2\pi)$ & Time constant of 1st order filter on wind speed used for minimum pitch [1/1P]. \\
+37 & $\tau_{\theta} \Omega_0 /(2\pi)$ & Time constant of 1st order filter on pitch angle for gain scheduling [1/1P]. \\
+38 & $k_{dmp}$ & Proportional gain of DT damper [Nm/(rad/s)], requires frequency in input 10.
+\end{tabular}
+\caption{All parameters of the controller related to the parameters shown in the diagram in Figure~\ref{f:diagram} and with additional explanations compared to Table~\ref{t:init}. \label{t:par}}
+\end{center}
+\end{table}
+
+
+
+\begin{table}[b]
+\begin{center}
+\begin{verbatim}
+7
+ 0.0 3.0
+ 4.0 3.0
+ 5.0 2.5
+ 6.0 1.7
+ 7.0 0.8
+ 8.0 0.0
+50.0 0.0
+\end{verbatim}
+\caption{Example of a ``wptable.n'' file. First line contains an integer with the number of subsequent lines, which contain two numbers each, wind speed and minimum pitch angle in degrees.\label{t:wptable}}
+\end{center}
+\end{table}
+
+
+
+\section{Inputs and outputs}
+
+\begin{table}[b]
+\center \scriptsize
+\begin{verbatim}
+general time                           ; [s]
+constraint bearing1 shaft_rot 1 only 2 ; [rad/s] Generator LSS speed
+constraint bearing2 pitch1 1 only 1    ; [rad]
+constraint bearing2 pitch2 1 only 1    ; [rad]
+constraint bearing2 pitch3 1 only 1    ; [rad]
+wind free_wind 1 0.0 0.0 -124.6        ; [m/s] global coords at hub height
+\end{verbatim}
+\end{table}
+
+
+\begin{table}[b]
+\center
+\begin{tabular}{r|ll}
+Channel & Description \\ \hline
+ 1& Generator torque reference            &[Nm]\\
+ 2& Pitch angle reference of blade 1      &[rad]\\
+ 3& Pitch angle reference of blade 2      &[rad]\\
+ 4& Pitch angle reference of blade 3      &[rad]\\
+ 5& Power reference                       &[W]\\
+ 6& Filtered wind speed                   &[m/s]\\
+ 7& Filtered rotor speed                  &[rad/s]\\
+ 8& Filtered rotor speed error for torque &[rad/s]\\
+ 9& Bandpass filtered rotor speed         &[rad/s]\\
+10& Proportional term of torque contr.    &[Nm]\\
+11& Integral term of torque controller    &[Nm]\\
+12& Minimum limit of torque               &[Nm]\\
+13& Maximum limit of torque               &[Nm]\\
+14& Torque limit switch based on pitch    &[-]\\
+15& Filtered rotor speed error for pitch  &[rad/s]\\
+16& Power error for pitch                 &[W]\\
+17& Proportional term of pitch controller &[rad]\\
+18& Integral term of pitch controller     &[rad]\\
+19& Minimum limit of pitch                &[rad]\\
+20& Maximum limit of pitch                &[rad]\\
+21& Torque reference from DT damper       &[Nm]
+\end{tabular}
+\end{table}
+
+\section{Cut-in procedure - start up at any wind speed}
+
+The controller has a very simplified cut-in procedure, which is not intended to model a real cut-in, but rather to enable start-up of normal operation DLCs at any wind speed. The blades are initially pitched out to maximum pitch and then at a given time in the simulation (input 24), the blades are pitched towards minimum pitch with zero generator torque reference. As the rotor speed increases, a first order filter of the difference the measured rotational speed and the minimum rotational speed with the time constant of 1/1P (one rotational period at rated speed) is updated in each time step $k$ as
+\begin{equation}
+\label{e:speedtrack}
+\Delta \Omega_k = f_1 \left(2\pi/\Omega_0; \Delta \Omega_{k-1} , \Omega_{k}-\Omega_{min} , \Omega_{k-1}-\Omega_{min}\right)
+\end{equation}
+During this speed-up, the speed error PID terms of the pitch controller is active at a quarter of their normal gains and the set point of it is the minimum rotor speed. The power error gains are set to zero, otherwise it will stay at minimum due to the zero generator torque reference (the factor of a quarter is chosen based on trial and error). The pitch controller thereby catches the rotational speed at the minimum speed and when $\Delta \Omega_k$ become within 2~\% of the minimum speed, the acceleration of the rotor is assumed to be under control and a generator cut-in time is registered. The torque reference is thereafter ramped up using the $\sigma$-function in Equation~\eqref{e:sigma} to its value determined by the normal controller at a user-defined time after the generator cut-in time. In the same period, the rotational speed set point for the pitch controller is ramped up to the rated speed $\Omega_0$, and both speed and power error gains are ramped up to their values determined by the normal gain scheduling. The controller should thereafter be operating normally, and this start-up will at moderate to high wind speeds take less than 100~s for the DTU 10~MW RWT.
+
+There should be no need for wind ramping for the controller to start up, however, caution should be made on not to start high wind speed (above rated) simulations with too high initial rotational speed. Too high initial rotor speed may cause the pitch and torque controllers to overreact and they may enter a state of competition. If the user can allow long start-up periods then the most stable way is set a late cut-in time to let the rotor slow down to idling before the cut-in starts. However, at low wind speeds, the start-up will then take a long time, and a very early cut-in (e.g. 0.1~s) is recommended, combined with an initial rotational speed is set to a value 50-75~\% of the minimum speed.
+
+
+\section{Cut-out procedures} \label{s:cutout}
+
+
+
+
+
+
+\section{Programming}
+
+The controller is programmed in Fortran90 using the format of the \emph{type2 DLL interface for HAWC2} \cite{Larsen12} and the source code is listed in the appendix.

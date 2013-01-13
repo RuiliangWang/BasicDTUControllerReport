@@ -1,0 +1,117 @@
+
+
+$\Omega_k$
+
+$\theta_{1,k}$
+
+$\theta_{2,k}$
+
+$\theta_{3,k}$
+
+$V_k$
+
+\fbox{$\bar{\Omega}_k = f_2\left(\zeta_{\Omega},\omega_{\Omega}; \bar{\Omega}_{k-1},\bar{\Omega}_{k-2}, \Omega_{k}, \Omega_{k-1}, \Omega_{k-2} \right)$}
+
+\fbox{$\bar e_{\Omega,k} = f_n \left( \zeta_{n,1}, \zeta_{n,2}, \omega_{n}; \bar e_{\Omega,k-1}, \bar e_{\Omega,k-2}, e_{\Omega,k}, e_{\Omega,k-1}, e_{\Omega,k-2} \right)$}
+
+\fbox{$\bar e_{P,k} = f_n \left( \zeta_{n,1}, \zeta_{n,2}, \omega_{n}; \bar e_{P,k-1}, \bar e_{P,k-2}, e_{P,k}, e_{P,k-1}, e_{P,k-2} \right)$}
+
+
+\fbox{$\Omega_{d,k} = f_p \left(\zeta_{d},\omega_{n}; \Omega_{d,k-1}, \Omega_{d,k-2}, \Omega_k, \Omega_{k-1}, \Omega_{k-2} \right)$}
+
+$\Omega_{d,k}$
+
+\fbox{$\theta_{m,k}=\frac13 \sum_{i=1}^3 \theta_{i,k}$}
+
+
+\fbox{$\bar \theta_{m,k} = f_1 \left(\tau_{\theta}; \bar \theta_{m,k-1} , \theta_{m,k} , \theta_{m,k-1} \right)$}
+
+
+$\bar \theta_{m,k}$
+
+
+\fbox{$\bar V_k = f_1 \left(\tau_{V}; \bar V_{k-1}, V_k, V_{k-1}\right)$}
+
+$\bar V_k$
+
+\fbox{$Q_{g,ref,k}^{full} = P_0/\Omega_k \;\;\; \mbox{or} \;\;\; Q_{g,ref,k}^{full} = Q_0$}
+
+\fbox{\parbox{60mm}{\vspace{-\abovedisplayskip} \begin{align*}
+Q_{g,ref,k}^{full} &= P_0/\Omega_k \;\;\; \mbox{Constant power control}\\
+Q_{g,ref,k}^{full} &= P_0/\Omega_0 \;\;\; \mbox{Constant torque control}
+\end{align*}\vspace{-1.5\belowdisplayskip}}}
+
+
+\fbox{$\theta_{min,k} = \theta_{min}\left(\bar V_k \right)$}
+
+\fbox{$\sigma_{\theta,k} = f_1 \left(\frac{2\pi}{\Omega_0}; \sigma_{\theta,k-1} , \sigma\left(\theta_{f_0}, \theta_{f_1}; \theta_{m,k} \right) , \sigma\left(\theta_{f_0}, \theta_{f_1}; \theta_{m,k-1} \right)\right)$}
+
+\fbox{\parbox{50mm}{\vspace{-\abovedisplayskip} \begin{align*}
+\sigma_{min,k} &= \sigma \left(\Omega_{min_1}, \Omega_{min_2}; \bar \Omega_k \right)\\
+\sigma_{max,k} &= \sigma \left(\Omega_{max_1}, \Omega_{max_2}; \bar \Omega_k \right)
+\end{align*}\vspace{-1.5\belowdisplayskip}}}
+
+\fbox{\parbox{80mm}{\vspace{-\abovedisplayskip} \begin{align*}
+Q_{g,min,k}^{part} &= \min \left( \sigma_{min,k} \, K \bar \Omega_k^2 , K \Omega_{max_1}^2 \right)\\
+Q_{g,max,k}^{part} &= \max \left( \left( 1-\sigma_{max,k}\right) K \bar \Omega_k^2 + \sigma_{max,k} \, Q_{g,ref,k}^{full}, \, K \Omega_{min_2}^2 \right)
+\end{align*}\vspace{-1.5\belowdisplayskip}}}
+
+\fbox{\parbox{50mm}{\vspace{-\abovedisplayskip} \begin{align*}
+Q_{g,min,k} &= \left(1-\sigma_{\theta,k}\right) Q_{g,min,k}^{part} + \sigma_{\theta,k} \, Q_{g,ref,k}^{full}\\
+Q_{g,max,k} &= \left(1-\sigma_{\theta,k}\right) Q_{g,max,k}^{part} + \sigma_{\theta,k} \, Q_{g,ref,k}^{full}
+\end{align*}\vspace{-1.5\belowdisplayskip}}}
+
+
+\fbox{$e_{Q,k} = \bar \Omega_k - \Omega_{set,k}$}
+
+
+\fbox{$Q_{I,k} = Q_{I,k-1} + k_{I}^g \frac{\Delta t}2 \left( e_{Q,k} + e_{Q,k-1} \right) $}
+
+\fbox{$Q_{P,k} = k_{P}^g \frac12 \left( e_{Q,k} + e_{Q,k-1} \right) $}
+
+\fbox{$Q_{D,k} = k_{D}^g \left( e_{Q,k} - e_{Q,k-1} \right)/\Delta t $}
+
+\fbox{$Q_{PID,k} = \max\left( Q_{g,min,k}, \min\left( Q_{g,max,k}, Q_{P,k} + Q_{I,k} + Q_{D,k} \right) \right)$}
+
+\fbox{$Q_{PID,k} = \max\left( Q_{g,min,k}^{part}, \min\left( Q_{g,max,k}^{part}, Q_{P,k} + Q_{I,k} + Q_{D,k} \right) \right)$}
+
+\fbox{$Q_{PID,k} = Q_{g,max,k}^{full}$}
+
+\fbox{$Q_{I,k-1} = Q_{PID,k-1} - Q_{P,k-1} - Q_{D,k-1}$}
+
+\fbox{$Q_{dmp,k} = k_{dmp} \Omega_{d,k}$}
+
+\fbox{$\Omega_{set,k} = \left\{ \begin{array}{l} \Omega_{min} \;\;\mbox{for} \;\; \Omega_k < \frac12(\Omega_{min} + \Omega_0) \\ \Omega_0 \;\;\;\;\;\; \mbox{otherwise} \end{array} \right.$}
+
+\fbox{$Q_{ref,k} = Q_{PID,k} + Q_{dmp,k}$}
+
+$Q_{ref,k}$
+
+\fbox{$P_{ref,k} = Q_{PID,k} \Omega_k$}
+
+\fbox{$e_{\Omega,k} = \bar \Omega_k - \Omega_0$}
+
+\fbox{$e_{P,k} = P_{ref,k} - P_0$}
+
+\fbox{$\theta_{P,k} = \eta_k \left( k_{P} \frac12 \left(\bar e_{\Omega,k} + \bar e_{\Omega,k-1}\right) + k_P^P \frac12 \left(\bar e_{P,k} + \bar e_{P,k-1}\right) \right)$}
+
+
+\fbox{$\theta_{I,k} = \theta_{I,k-1} + \eta_k \left( k_I \frac{\Delta t}2\left(\bar e_{\Omega,k} + \bar e_{\Omega,k-1}\right) + k_I^P \frac{\Delta t}2\left(\bar e_{P,k} + \bar e_{P,k-1}\right) \right) $}
+
+\fbox{$\theta_{D,k} = \eta_k \left( k_{D} \left(\bar e_{\Omega,k} - \bar e_{\Omega,k-1}\right)/\Delta t + k_P^P \left(\bar e_{P,k} - \bar e_{P,k-1}\right)/\Delta t \right)$}
+
+\fbox{$\theta_{ref,k} = \max\left( \theta_{min,k}, \theta_{P,k} + \theta_{I,k} + \theta_{D,k}\right)$}
+
+
+\fbox{$\theta_{I,k-1} = \theta_{ref,k-1} - \theta_{P,k-1} - \theta_{D,k-1} $}
+
+
+\fbox{$\eta_{A,k}=\frac1{ 1 +\bar \theta_{m,k}/K_{1} + \bar \theta_{m,k}^2/K_{2} }$}
+
+
+\fbox{$\eta_{nl,k}=1+\frac{e_{\Omega,k}^2}{\left(\Omega_2-\Omega_0\right)^2}$}
+
+
+\fbox{$\eta_k=\eta_{A,k} \eta_{nl,k}$}
+
+$\theta_{ref,k}$

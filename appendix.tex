@@ -1,7 +1,7 @@
 \appendix
-\chapter{Source code} \label{cha:source}
+\chapter{Source code} \label{ch:source}
 
-This appendix contains the source of the controller as given by revision no. 4 to the SVN repository 
+This appendix contains the source of the controller as given by revision no. 6 to the SVN repository
 \begin{verbatim}//repos.gbar.dtu.dk/mhha/Controller/\end{verbatim}
 There are two files, risoe\_controller.f90 and risoe\_controller\_fcns.f90 in this Fortran90 code. This type2 DLL for HAWC2 has been compiled with Intel Fortran 13.0.
 
@@ -529,10 +529,8 @@ else
   elseif (x.gt.x1) then
     switch_spline=1.d0
   else
-    switch_spline=2.d0/(-x1**3-3.d0*x1*x0**2+x0**3+3.d0*x0*x1**2)*x**3&
-                 -3.d0*(x0+x1)/(-x1+x0)/(x1**2-2.d0*x1*x0+x0**2)*x**2&
-                 +6.d0*x1*x0/(-x1+x0)/(x1**2-2.d0*x1*x0+x0**2)*x&
-                 +(x0-3.d0*x1)*x0**2/(-x1+x0)/(x1**2-2*x1*x0+x0**2)
+    switch_spline=2.d0/(-x1+x0)**3*x**3+(-3.d0*x0-3.d0*x1)/(-x1+x0)**3*x**2&
+                 +6.d0*x1*x0/(-x1+x0)**3*x+(x0-3.d0*x1)*x0**2/(-x1+x0)**3
   endif
 endif
 return
@@ -832,8 +830,7 @@ PIDvar.outset=PIDvar.outset1_old+0.5d0*dt*(Kgain(2,1)*PIDvar.Kint(1)*(error(1)+P
 PIDvar.outpro=0.5d0*(Kgain(1,1)*PIDvar.Kpro(1)*(error(1)+PIDvar.error1(1))&
                     +Kgain(1,2)*PIDvar.Kpro(2)*(error(2)+PIDvar.error1(2)))
 ! Update differential term
-PIDvar.outdif=(Kgain(3,1)*PIDvar.Kdif(1)*(error(1)-PIDvar.error1_old(1))&
-              +Kgain(3,2)*PIDvar.Kdif(2)*(error(2)-PIDvar.error1_old(2)))/dt
+PIDvar.outdif=(Kgain(3,1)*PIDvar.Kdif(1)*(error(1)-PIDvar.error1_old(1)))/dt
 ! Sum to up
 PIDvar.outres=PIDvar.outset+PIDvar.outpro+PIDvar.outdif
 ! Satisfy hard limits
@@ -864,3 +861,123 @@ end function PID2
 end module risoe_controller_fcns
 \end{verbatim}
 }
+
+\pagebreak
+\chapter{Discrete filters} \label{ch:filters}
+
+This appendix contains the derivations of the discrete filters and a test of their validity. Some of the parameters of the filters are hardcoded in the current implementation as shown in the previous appendix. The values of these hardcoded parameters are repeated herein.
+
+\section{First order filter}
+
+In continuous form the first order low-pass filter can be written as
+\begin{equation}\label{e:f1cont}
+\dot{\bar x} + \tau \bar x = \tau x
+\end{equation}
+where $x=x(t)$ is the original signal, $\bar x(t)$ is the filtered signal, $\tau$ is the user-defined time constant of the filter, and $\dot{(\,)}=\d/dt$ denotes the time derivative. The discrete first order low-pass filter used in the controller is derived from this continuous formulation by approximating the states and their time derivatives as an average based on the previous and current step:
+\begin{equation}\label{e:1storder}
+x(t)\approx \frac{x_k+x_{k-1}}2 \;\;\;\;\mbox{and} \;\;\;\;\dot x(t)\approx \frac{x_k-x_{k-1}}{\Delta t}
+\end{equation}
+where $k$ is the index of the current time step, and $\Delta t$ is the time step length. Substitution into \eqref{e:f1cont} and rearranging the terms, the $f_1$-function is obtained as
+\begin{equation}
+\label{e:f1}
+f_1 \left(\tau; \bar x_{k-1} , x_{k} , x_{k-1} \right) = a_1 \bar x_{k-1} + b_0 x_k + b_1 x_{k-1}
+\end{equation}
+where
+\begin{equation}
+\label{e:f1coef}
+a_1=\frac {2\tau-\Delta t}{2\tau+\Delta t} , \;\;\;\; b_0 = \frac {\Delta t}{2\tau+\Delta t}, \;\;\;\; b_1 = b_0
+\end{equation}
+
+To test this discrete filter, the Finite-Difference Method for constructing periodic solutions \cite{Nayfeh95} has been used to obtain the period solutions to harmonic excitation of the filter with a large number of different excitation frequencies. Figure~\ref{f:f1} shows the amplitude and phase of these solutions (red circles) compared to the transfer function obtained by transformation of the continuous formulation \eqref{e:f1cont} into the frequency domain.
+
+\begin{figure}[t]
+\centerline{\epsfig{figure=f1.eps,width=0.95\textwidth} }
+\caption{Test of the first order low-pass filter function \eqref{e:f1} with a time constant of $\tau=1$~s and a time step of $\Delta t = 0.125$~s. \label{f:f1}}
+\end{figure}
+
+
+\section{Second order filters}
+
+The discrete second filters used in the controller are derived from the continuous formulations by approximating the states and their time derivatives as an average based on the two previous and current step:
+\begin{align}\label{e:2ndorder}
+x(t) \approx \frac{x_k+x_{k-1}+x_{k-2}}3,  \;\;\;\;\dot x(t)\approx \frac{x_k-x_{k-2}}{2\Delta t} \;\;\;\;\mbox{and} \;\;\;\;\ddot x(t)\approx \frac{x_k-2 x_{k-1}+ x_{k-2}}{\Delta t^2}
+\end{align}
+The continuous form of the second order low-pass filter is
+\begin{equation}
+\label{e:f2cont}
+\ddot{\bar x} + 2 \zeta \omega \dot{\bar x} + \omega^2\bar x = \omega^2 x
+\end{equation}
+where again $x=x(t)$ and $\bar x(t)$ are the original and filtered signals, respectively. The parameters $\zeta$ and $\omega$ are the user-defined damping ratio and frequency of the filter. Substitution of \eqref{e:2ndorder} into this equations yields the discrete second order low-pass filter function:
+\begin{equation}
+\label{e:f2}
+f_2 \left(\zeta, \omega; \bar x_{k-1} , \bar x_{k-2} , x_{k} , x_{k-1} , x_{k-2} \right) = a_1 \bar x_{k-1} + a_2 \bar x_{k-2} + b_0 x_k + b_1 x_{k-1}+ b_2 x_{k-2}
+\end{equation}
+where
+\begin{gather}\nonumber
+a_1=\frac {6-\omega^2 \Delta t^2}{d},
+\;\;\;\;
+a_2=\frac {-3+3\,\zeta\,\omega\,\Delta t-\omega^2\Delta t^2}{d}, \\
+\label{e:f2coef}
+b_0= \frac {\omega^2\Delta t^2}{d}, \;\;\;\; b_1 = b_0\;\;\;\; b_2 = b_0
+\end{gather}
+where the common denominator is $d=3+3 \zeta \omega \Delta t+\omega^2 \Delta t^2$.
+
+The continuous form of the second order notch filter is
+\begin{equation}
+\label{e:fncont}
+\ddot{\bar x} + 2 \zeta_1 \omega \dot{\bar x} + \omega^2\bar x = \ddot{x} + 2 \zeta_2 \omega \dot{x} + \omega^2 x
+\end{equation}
+where $\zeta_1=0.1$, $\zeta_2=0.001$ and $\omega$ are the hardcoded damping ratios and the user-defined frequency of the notch filter, respectively. Substitution of \eqref{e:2ndorder} into this equations yields the discrete second order notch filter function:
+\begin{equation}
+\label{e:fn}
+f_n \left(\zeta_{1}, \zeta_{2}, \omega; \bar x_{k-1} , \bar x_{k-2} , x_{k} , x_{k-1} , x_{k-2} \right) = a_1 \bar x_{k-1} + a_2 \bar x_{k-2} + b_0 x_k + b_1 x_{k-1}+ b_2 x_{k-2}
+\end{equation}
+where
+\begin{gather}\nonumber
+a_1=-{\frac {-6+{\omega}^{2}{\Delta t}^{2}}{d}},
+\;\;\;\;
+a_2=-{\frac {3-3\,\zeta_{1}\,\omega\,\Delta t+{\omega}^{2}{\Delta t}^{2}}{d}}, \\
+\label{e:fncoef}
+b_0 = {\frac {3+3\,\zeta_{2}\,\omega\,\Delta t+{\omega}^{2}{\Delta t}^{2}}{d}}, \;\;\;\;
+b_1 = -a_1,\;\;\;\;
+b_2 = {\frac {3-3\,\zeta_{2}\,\omega\,\Delta t+{\omega}^{2}{\Delta t}^{2}}{d}}
+\end{gather}
+where the common denominator is $d=3+3\,\zeta_{1}\,\omega\,\Delta t+{\omega}^{2}{\Delta t}^{2}$.
+
+The continuous form of the second order band-pass filter used in the controller is
+\begin{equation}
+\label{e:fpcont}
+\ddot{\bar x} + 2 \zeta \omega \dot{\bar x} + \omega^2\bar x = 2 \zeta \omega \left(\dot{x} + \tau \ddot{x}\right)
+\end{equation}
+where $\zeta=0.02$ and $\omega$ are the hardcoded damping ratio and the user-defined frequency of the band-pass filter, respectively. The additional parameter $\tau$ is a time constant which in the current implementation is hardcoded to zero. Substitution of \eqref{e:2ndorder} into this equations yields the discrete second order band-pass filter function:
+\begin{equation}
+\label{e:fp}
+f_p \left(\zeta, \omega; \bar x_{k-1} , \bar x_{k-2} , x_{k} , x_{k-1} , x_{k-2} \right) = a_1 \bar x_{k-1} + a_2 \bar x_{k-2} + b_0 x_k + b_1 x_{k-1}+ b_2 x_{k-2}
+\end{equation}
+where
+\begin{gather}\nonumber
+a_1 =-{\frac {-6+{\omega}^{2}{\Delta t}^{2}}{d}},\;\;\;\;
+a_2 =-{\frac {3-3\,\zeta\,\omega\,\Delta t+{\omega}^{2}{\Delta t}^{2}}{d}}, \\
+\label{e:fpcoef}
+b_0 =3\,{\frac {\zeta\,\omega\, \left( \Delta t+2\,\tau \right) }{d}},\;\;\;\;
+b_1 =-12\,{\frac {\zeta\,\omega\,\tau}{d}},\;\;\;\;
+b_2 =-3\,{\frac {\zeta\,\omega\, \left( \Delta t-2\,\tau \right) }{d}}
+\end{gather}
+where the common denominator is $d=3+3 \zeta \omega \Delta t+\omega^2 \Delta t^2$. Notice that the hardcoded parameter $\tau$ is not included in the list of parameters in the function call.
+
+Test and validation of these second order filters are shown in Figures~\ref{f:f2}~--~\ref{f:fp}.
+
+\begin{figure}[b!]
+\centerline{\epsfig{figure=f2.eps,width=0.95\textwidth} }
+\caption{Test of the second order low-pass filter function \eqref{e:f2} with a damping ratio of $\zeta=0.7$, a frequency of $\omega=0.15$~Hz and a time step of $\Delta t = 0.125$~s. \label{f:f2}}
+\end{figure}
+
+\begin{figure}[t]
+\centerline{\epsfig{figure=fn.eps,width=0.95\textwidth} }
+\caption{Test of the second order notch filter function \eqref{e:fn} with a frequency of $\omega=0.625$~Hz and a time step of $\Delta t = 0.04$~s. \label{f:fn}}
+\end{figure}
+
+\begin{figure}[t]
+\centerline{\epsfig{figure=fn.eps,width=0.95\textwidth} }
+\caption{Test of the second order band-pass filter function \eqref{e:fp} with a frequency of $\omega=0.625$~Hz and a time step of $\Delta t = 0.04$~s. \label{f:fp}}
+\end{figure}

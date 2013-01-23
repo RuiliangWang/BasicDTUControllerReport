@@ -75,7 +75,7 @@ Q_{g,max,k} &= \left(1-\sigma_{\theta,k}\right) Q_{g,max,k}^{part} + \sigma_{\th
 
 \fbox{$Q_{PID,k} = \max\left( Q_{g,min,k}^{part}, \min\left( Q_{g,max,k}^{part}, Q_{P,k} + Q_{I,k} + Q_{D,k} \right) \right)$}
 
-\fbox{$Q_{PID,k} = Q_{g,max,k}^{full}$}
+\fbox{$Q_{PID,k} = Q_{g,ref,k}^{full}$}
 
 \fbox{$Q_{I,k-1} = Q_{PID,k-1} - Q_{P,k-1} - Q_{D,k-1}$}
 
@@ -98,7 +98,7 @@ $Q_{ref,k}$
 
 \fbox{$\theta_{I,k} = \theta_{I,k-1} + \eta_k \left( k_I \frac{\Delta t}2\left(\bar e_{\Omega,k} + \bar e_{\Omega,k-1}\right) + k_I^P \frac{\Delta t}2\left(\bar e_{P,k} + \bar e_{P,k-1}\right) \right) $}
 
-\fbox{$\theta_{D,k} = \eta_k \left( k_{D} \left(\bar e_{\Omega,k} - \bar e_{\Omega,k-1}\right)/\Delta t + k_P^P \left(\bar e_{P,k} - \bar e_{P,k-1}\right)/\Delta t \right)$}
+\fbox{$\theta_{D,k} = \eta_k k_{D} \left(\bar e_{\Omega,k} - \bar e_{\Omega,k-1}\right)/\Delta t $}
 
 \fbox{$\theta_{ref,k} = \max\left( \theta_{min,k}, \theta_{P,k} + \theta_{I,k} + \theta_{D,k}\right)$}
 

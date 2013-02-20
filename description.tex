@@ -100,6 +100,15 @@ The switching between partial and full load control of the generator torque is b
 
 The measured generator LSS speed $\Omega_k$ is fed through a band-pass filter with the free-free drivetrain torsional frequency $\omega_n$ as center frequency (see example of the filter in Appendix~\ref{ch:filters}). The filtered speed $\Omega_{d,k}$, containing in-phase variations with frequencies around this frequency, is then multiplied by a gain factor $k_{dmp}$ and added to the torque feedback from the PID controller to give the generator torque reference. Note that this drivetrain damper is always active when $k_{dmp}>0$.
 
+\subsection{Additional non-linear pitch control term}
+
+This term should only be active during extreme event where severe over-speed can occur.
+
+\begin{align}
+	\dot{\theta}_{+} &= \dot{\theta}_{+} + k_{os} ( \dot{\bar{\Omega}}_k/\Omega_{os} + e_{\Omega,k}/\dot{\Omega}_{os} ) &\text{, for } ( \dot{\bar{\Omega}}_k/\Omega_{os} + e_{\Omega,k}/\dot{\Omega}_{os} ) > 1 \\
+	\dot{\theta}_{+} &= \dot{\theta}_{+} &\text{, for } ( \dot{\bar{\Omega}}_k/\Omega_{os} + e_{\Omega,k}/\dot{\Omega}_{os} ) \leq 1	
+\end{align}
+
 \section{Parameters}\label{s:par}
 
 All parameters of the controller are transferred to the DLL using HAWC2 commands for the ``init'' routine of the type2 DLL \cite{Larsen12}. Table~\ref{t:init} shows the command list from the input to the DTU 10MW RWT, and some more details of all 38 parameters are given in Table~\ref{t:par}, where the notation of the parameters used in the diagram of Figure~\ref{f:diagram} and some additional notations can also be seen.
@@ -157,6 +166,12 @@ constant  36   5.0    ; Time constant of 1st order filter on wind speed used for
 constant  37   5.0    ; Time constant of 1st order filter on pitch angle used for gain scheduling [1/1P]
 ; Drivetrain damper
 constant  38   0.0  ; Proportional gain of active DT damper [Nm/(rad/s)], requires frequency in input 10
+; Over speed shutdown
+constant  39   10.0; Percent maximum over speed of generator speed before cut-out [%]
+; Additional non-linear pitch control term
+constant  40  0.0  ; Err0 [rad/s] 
+constant  41  0.0  ; ErrDot0 [rad/s^2]
+constant  42  0.0  ; PitNonLin1 [rad/s]
 \end{verbatim}
 \caption{All parameters of the controller, here shown as the HAWC2 input commands for the ``init'' routine of the controller, see type2 DLL interface description in the HAWC2 manual. The shown values are taken from the input to the DTU 10MW RWT. \label{t:init}}
 \end{center}
@@ -210,7 +225,13 @@ Input &  & Additional explanation if assumed needed \\ \hline
 35 & $\gamma$ & Percentage of the rated speed when the torque limits are fully opened $\Omega_{max_2}=\gamma\Omega_0$ to let PID controller be active, and the opening starts at $\Omega_{min_2}=(2 \gamma -1)\Omega_0$. The same percentage is used for opening the torque limits for PID control around the minimum rotational speed, where the torque limits start to open at $\Omega_{max_1}=\Omega_{min}/\gamma$ and fully open at $\Omega_{min_1}=\Omega_{min}$. \\
 36 & $\tau_V \Omega_0 /(2\pi)$ & Time constant of 1st order filter on wind speed used for minimum pitch [1/1P]. \\
 37 & $\tau_{\theta} \Omega_0 /(2\pi)$ & Time constant of 1st order filter on pitch angle for gain scheduling [1/1P]. \\
-38 & $k_{dmp}$ & Proportional gain of DT damper [Nm/(rad/s)], requires frequency in input 10.
+38 & $k_{dmp}$ & Proportional gain of DT damper [Nm/(rad/s)], requires frequency in input 10. \\
+\hline
+39 & -& Over speed percentage  [\%], before initiating shut down. \\
+\hline
+40 & $\Omega_{os}$ & Rotor speed error scaling factor  [rad/s]. \\
+41 & $\dot{\Omega}_{os}$ & Rotor acceleration error scaling factor  [rad/s${}^2$]. \\
+42 & $k_{os}$ & Pitch rate gain  [rad/s].
 \end{tabular}
 \caption{All parameters of the controller related to the parameters shown in the diagram in Figure~\ref{f:diagram} and with additional explanations compared to Table~\ref{t:init}. \label{t:par}}
 \end{center}
@@ -245,6 +266,7 @@ constraint bearing2 pitch1 1 only 1    ; [rad]
 constraint bearing2 pitch2 1 only 1    ; [rad]
 constraint bearing2 pitch3 1 only 1    ; [rad]
 wind free_wind 1 0.0 0.0 -124.6        ; [m/s] global coords at hub height
+constant 0.0                         ; [rad/s] Feed-forward pitch rate
 \end{verbatim}
 \caption{HAWC2 commands that define the input to the controller DLL. Note that the command ``wind free\_wind 1 x y z'' will give all three components of the free wind at the point x,y,z, both in global coordinates \cite{Larsen12}, thus in all eight inputs. \label{t:input}}
 \end{table}
@@ -263,7 +285,7 @@ Channel & Description \\ \hline
  6& Filtered wind speed, $\bar V_k$                   &[m/s]\\
  7& Filtered rotor speed, $\bar \Omega_k$                  &[rad/s]\\
  8& Filtered rotor speed error for torque, $e_{Q,k}$ &[rad/s]\\
- 9& Bandpass filtered rotor speed, $\Omega_{d,k}$         &[rad/s]\\
+ 9& Band-pass filtered rotor speed, $\Omega_{d,k}$         &[rad/s]\\
 10& Proportional term of torque controller, $Q_{P,k}$    &[Nm]\\
 11& Integral term of torque controller, $Q_{I,k}$    &[Nm]\\
 12& Minimum limit of torque, $Q_{g,min,k}$               &[Nm]\\
@@ -275,7 +297,9 @@ Channel & Description \\ \hline
 18& Integral term of pitch controller, $\theta_{I,k}$     &[rad]\\
 19& Minimum limit of pitch, $\theta_{min,k}$                &[rad]\\
 20& Maximum limit of pitch, $\theta_{max}$                &[rad]\\
-21& Torque reference from DT damper, $Q_{dmp,k}$       &[Nm]
+21& Torque reference from DT damper, $Q_{dmp,k}$       &[Nm] \\
+22& Status signal,        &[-] \\
+23& Pitch rate to be added to pitch controller,        &[rad/s]
 \end{tabular}
 \caption{Outputs from the controller DLL, where only the first two are needed. The rest are for analysis of controller behavior.  \label{t:output}}
 \end{table}

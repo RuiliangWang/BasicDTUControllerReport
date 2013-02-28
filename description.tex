@@ -109,6 +109,8 @@ This term should only be active during extreme event where severe over-speed can
 	\dot{\theta}_{+} &= \dot{\theta}_{+} &\text{, for } ( \dot{\bar{\Omega}}_k/\Omega_{os} + e_{\Omega,k}/\dot{\Omega}_{os} ) \leq 1	
 \end{align}
 
+This control block is only active if ($\Omega_{os}$,$\dot{\Omega}_{os}$,$k_{os}$) $\neq$ 0.
+
 \section{Parameters}\label{s:par}
 
 All parameters of the controller are transferred to the DLL using HAWC2 commands for the ``init'' routine of the type2 DLL \cite{Larsen12}. Table~\ref{t:init} shows the command list from the input to the DTU 10MW RWT, and some more details of all 38 parameters are given in Table~\ref{t:par}, where the notation of the parameters used in the diagram of Figure~\ref{f:diagram} and some additional notations can also be seen.

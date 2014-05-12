@@ -98,7 +98,7 @@ The switching between partial and full load control of the generator torque is b
 
 \subsection{Drivetrain damper}\label{s:dmp}
 
-The measured generator LSS speed $\Omega_k$ is fed through a band-pass filter with the free-free drivetrain torsional frequency $\omega_n$ as center frequency (see example of the filter in Appendix~\ref{ch:filters}). The filtered speed $\Omega_{d,k}$, containing in-phase variations with frequencies around this frequency, is then multiplied by a gain factor $k_{dmp}$ and added to the torque feedback from the PID controller to give the generator torque reference. Note that this drivetrain damper is always active when $k_{dmp}>0$.
+The measured generator LSS speed $\Omega_k$ is fed through a band-pass filter with the free-free drivetrain torsional frequency $\omega_n$ as center frequency (see example of the filter in Appendix~\ref{ch:filters}). The filtered speed $\Omega_{d,k}$, containing in-phase variations with frequencies around this frequency, is then multiplied by a gain factor $k_{dmp}$ and added to the torque feedback from the PID controller to give the generator torque reference. Note that this drivetrain damper is always active when $k_{dmp} \neq 0$.
 
 \subsection{Additional non-linear pitch control term}
 
@@ -111,75 +111,16 @@ This term should only be active during extreme event where severe over-speed can
 
 This control block is only active if ($\Omega_{os}$,$\dot{\Omega}_{os}$,$k_{os}$) $\neq$ 0.
 
+\subsection{Aerodynamic damping gain}
+\subsection{K-Omega-Omegadot}
+\subsection{TSR tracking}
+\subsection{Storm control}
+
 \section{Parameters}\label{s:par}
 
-All parameters of the controller are transferred to the DLL using HAWC2 commands for the ``init'' routine of the type2 DLL \cite{Larsen12}. Table~\ref{t:init} shows the command list from the input to the DTU 10MW RWT, and some more details of all 38 parameters are given in Table~\ref{t:par}, where the notation of the parameters used in the diagram of Figure~\ref{f:diagram} and some additional notations can also be seen.
+All parameters of the controller are transferred to the DLL using HAWC2 commands for the \verb|init_regulation| routine of the type2 DLL \cite{Larsen12}. Details of all 42 parameters are given in Table~\ref{t:par}, where the notation of the parameters used in the diagram of Figure~\ref{f:diagram} and some additional notations can also be seen. Additional features can be enabled by using the \verb|init_regulation_2| instead, this routine requires 51 parameters, where the fist 42 are identical to those of \verb|init_regulation|. The additional parameters can be found in Table~\ref{t:par2}
 
-\begin{table}[t!]
-\begin{center}
-\scriptsize
-\begin{verbatim}
-; Overall parameters
-constant   1 10000.0  ; Rated power [kW]
-constant   2   0.733  ; Minimum rotor speed [rad/s]
-constant   3   1.005  ; Rated rotor speed [rad/s]
-constant   4  15.6e6  ; Maximum allowable generator torque [Nm]
-constant   5 100.0    ; Minimum pitch angle, theta_min [deg],
-                      ; if |theta_min|>90, then a table of <wsp,theta_min> is read ;
-                      ; from a file named 'wptable.n', where n=int(theta_min)
-constant   6  90.0    ; Maximum pitch angle [deg]
-constant   7  10.0    ; Maximum pitch velocity operation [deg/s]
-constant   8   0.2    ; Frequency of generator speed filter [Hz]
-constant   9   0.7    ; Damping ratio of speed filter [-]
-constant  10   0.64   ; Frequency of free-free DT torsion mode [Hz], if zero no notch filter used
-; Partial load control parameters
-constant  11   9.5e6  ; Optimal Cp tracking K factor [kNm/(rad/s)^2], ;
-                      ; Qg=K*Omega^2, K=eta*0.5*rho*A*Cp_opt*R^3/lambda_opt^3
-constant  12   7.33e7 ; Proportional gain of torque controller [Nm/(rad/s)]
-constant  13   1.32e7 ; Integral gain of torque controller [Nm/rad]
-constant  14   0.0    ; Differential gain of torque controller [Nm/(rad/s^2)]
-; Full load control parameters
-constant  15   1      ; Generator control switch [1=constant power, 2=constant torque]
-constant  16   0.592  ; Proportional gain of pitch controller [rad/(rad/s)]
-constant  17   0.133  ; Integral gain of pitch controller [rad/rad]
-constant  18   0.0    ; Differential gain of pitch controller [rad/(rad/s^2)]
-constant  19   0.4e-8 ; Proportional power error gain [rad/W]
-constant  20   0.4e-8 ; Integral power error gain [rad/(Ws)]
-constant  21 164.13   ; Coefficient of linear term in aerodynamic gain scheduling, KK1 [deg]
-constant  22 702.09   ; Coefficient of quadratic term in aerodynamic gain scheduling, KK2 [deg^2] &
-                      ; (if zero, KK1 = pitch angle at double gain)
-constant  23   1.3    ; Relative speed for double nonlinear gain [-]
-; Cut-in simulation parameters
-constant  24   0.1    ; Cut-in time [s]
-constant  25   4.0    ; Time delay for soft start of torque [1/1P]
-; Cut-out simulation parameters
-constant  26   710    ; Cut-out time [s]
-constant  27   5.0    ; Time constant for 1st order filter lag of torque cut-out [s]
-constant  28   1      ; Stop type [1=linear two pitch speed stop, 2=exponential pitch speed stop]
-constant  29   1.0    ; Time delay for pitch stop 1 [s]
-constant  30  20.0    ; Maximum pitch velocity during stop 1 [deg/s]
-constant  31   1.0    ; Time delay for pitch stop 2 [s]
-constant  32  10.0    ; Maximum pitch velocity during stop 2 [deg/s]
-; Expert parameters (keep default values unless otherwise given)
-constant  33   0.5    ; Lower angle above lowest minimum pitch angle for switch [deg]
-constant  34   0.5    ; Upper angle above lowest minimum pitch angle for switch [deg], if equal then hard switch
-constant  35  95.0    ; Ratio between filtered speed and reference speed for fully open torque limits [%]
-constant  36   5.0    ; Time constant of 1st order filter on wind speed used for minimum pitch [1/1P]
-constant  37   5.0    ; Time constant of 1st order filter on pitch angle used for gain scheduling [1/1P]
-; Drivetrain damper
-constant  38   0.0  ; Proportional gain of active DT damper [Nm/(rad/s)], requires frequency in input 10
-; Over speed shutdown
-constant  39   10.0; Percent maximum over speed of generator speed before cut-out [%]
-; Additional non-linear pitch control term
-constant  40  0.0  ; Err0 [rad/s] 
-constant  41  0.0  ; ErrDot0 [rad/s^2]
-constant  42  0.0  ; PitNonLin1 [rad/s]
-\end{verbatim}
-\caption{All parameters of the controller, here shown as the HAWC2 input commands for the ``init'' routine of the controller, see type2 DLL interface description in the HAWC2 manual. The shown values are taken from the input to the DTU 10MW RWT. \label{t:init}}
-\end{center}
-\end{table}
-
-\begin{table}[p]
+\begin{table}[!htbp]
 \begin{center}
 \begin{tabular}{r|c|p{11.5cm}}
 Input &  & Additional explanation if assumed needed \\ \hline
@@ -202,7 +143,7 @@ Input &  & Additional explanation if assumed needed \\ \hline
 17 & $k_I$ & Integral gain of pitch controller [rad/rad].\\
 18 & $k_D$ & Differential gain of pitch controller [rad/(rad/s$^2$)]. \\
 19 & $k_P^P$ & Proportional power error gain [rad/W]. \\
-20 & $k_I^P$ &Integral power error gain [rad/(Ws)]. \\
+20 & $k_I^P$ & Integral power error gain [rad/(Ws)]. \\
 21 & $K_1$ & Coefficient of linear term in aerodynamic gain scheduling [deg]. \\
 22 & $K_2$ & Coefficient of quadratic term in aerodynamic gain scheduling [deg$^2$]. If this factor $K_2$ is set to zero then the controller will assumed a linear gain scheduling. The $K_1$ is then the pitch angle where the aerodynamic torque gain has doubled from its value at zero pitch.\\
 23 & $\Omega_2/\Omega_0$ & Normalized speed where the pitch controller gains are doubled.\\
@@ -235,7 +176,7 @@ Input &  & Additional explanation if assumed needed \\ \hline
 41 & $\dot{\Omega}_{os}$ & Rotor acceleration error scaling factor  [rad/s${}^2$]. \\
 42 & $k_{os}$ & Pitch rate gain  [rad/s].
 \end{tabular}
-\caption{All parameters of the controller related to the parameters shown in the diagram in Figure~\ref{f:diagram} and with additional explanations compared to Table~\ref{t:init}. \label{t:par}}
+\caption{All parameters of the controller related to the parameters shown in the diagram in Figure~\ref{f:diagram} . \label{t:par}}
 \end{center}
 \end{table}
 
@@ -252,6 +193,27 @@ Input &  & Additional explanation if assumed needed \\ \hline
 50.0 0.0
 \end{verbatim}
 \caption{Example of a ``wptable.n'' file. First line contains an integer with the number of subsequent lines, which contain two numbers each, wind speed and minimum pitch angle in degrees.\label{t:wptable}}
+\end{center}
+\end{table}
+
+\begin{table}[!htbp]
+\begin{center}
+\begin{tabular}{r|c|p{11.5cm}}
+Input &  & Additional explanation if assumed needed \\ \hline
+43 & $\kappa$ & For K-Omega-Omegadot controller\\
+44 & $\lambda_{opt}$ & Optimal TSR for TSR tracking, active if $K$ (parameter 11) is 0.\\
+45 & $R$ & Rotor radius for TSR tracking.\\
+\hline
+46 & $Kp_\Omega$ & Aerodynamic damping gain\\
+47 & $k1_\Omega$ & Aerodynamic damping gain scheduling parameter.\\
+48 & $k2_\Omega$ & Aerodynamic damping gain scheduling parameter.\\
+\hline
+49 &  & Flag to activate storm controller\\
+50 &  & Wind speed for storm controller (e.g. 25)\\
+51 &  & Cut-out wind speed (e.g. 45)
+\end{tabular}
+\caption{All parameters of the controller related to additional features.}
+\label{t:par2}
 \end{center}
 \end{table}
 

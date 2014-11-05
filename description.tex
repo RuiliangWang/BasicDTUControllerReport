@@ -51,9 +51,18 @@ The function is programmed such that if $x_0 \geq x_1$ then the $\sigma$-functio
 1 & \mbox{otherwise}
 \end{array} \right.
 \end{equation}
-Figure~\ref{f:sigma} shows an example of the $\sigma$-function where $x_0=1$ and $x_1=2$. In an actual implementation of the controller, this smooth function with a third order polynomial may be an unnecessary complexity, which can replaced by a linear interpolation function.
+Figure~\ref{f:sigma} shows an example of the $\sigma$-function where $x_0=1$ and $x_1=2$. In an actual implementation of the controller, this smooth function with a third order polynomial may be an unnecessary complexity, which can been replaced by a linear interpolation function.
 
-Figure~\ref{f:torque_limits} shows the torque limits in partial load operation of the DTU 10~MW RWT, where the minimum speed is 7~rpm and rated speed is 9.6~rpm. The limits are set to be closed approximately 5~\% above the minimum speed and start opening again at 90~\% and are fully open at 95~\% of the rated speed.
+Figure~\ref{f:torque_limits} shows the torque limits in partial load operation of the DTU 10~MW RWT, where the minimum speed is 5~rpm and rated speed is 9.6~rpm. Several operational regions can be seen here. Namely the bellow minimal rotational speed region, variable speed region with exclusion zone functionality, transient variable to constant speed region and finally constant speed region. The generator torque limits are set to be open in bellow minimal rotor speed, where the maximal torque limit is set to
+\begin{equation}\label{e:Tg_blw_min_w}
+Q_{g,max} = \max\left\{
+\begin{array}{l}
+K\cdot \Omega_{min}^2 \\
+K\cdot \bar\Omega_k^2
+\end{array} \right.
+\end{equation}
+%$Q_{g,max}= K\dot\Omega_{min}^2$
+and minimal torque is equal to zero. The generator torque limits are closed approximately 5~\% above the minimum speed $\Omega_{min}$ and start opening again at 90~\% and are fully open at 95~\% of the rated speed. If the exclusion zone functionality is active, the torque limits starts to open at 95~\% of the exclusion zone minimal speed $\omega_{L}$ and are closed approximately 5~\% above the exclusion zone maximal speed $\omega_{H}$. Where the spline function is used ot guarantee smooth transient. The maximal torque limit is set to $Q_{g,max}$ 5~\% above the $T_{G_{\omega_{L}}}$ and the minimal torque is set to $Q_{g,min}$ 95~\% of the $T_{G_{\omega_{H}}}$.
 
 \begin{figure}[t]
 \centerline{\epsfig{figure=sigma.eps,width=0.45\textheight} }
@@ -61,8 +70,9 @@ Figure~\ref{f:torque_limits} shows the torque limits in partial load operation o
 \end{figure}
 
 \begin{figure}[t]
-\centerline{\epsfig{figure=torque_limits.eps,width=0.55\textheight} }
-\caption{Torque limits in partial load operation of the DTU 10~MW RWT, where the minimum speed is 7~rpm and rated speed is 9.6~rpm. The limits are set to be closed approximately 5~\% above the minimum speed and start opening again at 90~\% and are fully open at 95~\% of the rated speed. \label{f:torque_limits}}
+\centerline{
+\epsfig{figure=torque_limits_rsa.eps,width=0.6\textwidth} }
+\caption{Torque limits in partial load operation of the DTU 10~MW RWT, where the minimum speed is 5~rpm and rated speed is 9.6~rpm. The limits are set to be closed approximately 5~\% above the minimum speed and start opening again at 90~\% and are fully open at 95~\% of the rated speed. \label{f:torque_limits}}
 \end{figure}
 
 \subsection{Full load operation}

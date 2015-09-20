@@ -30,9 +30,24 @@ open=any             % New chapter may begin on any page
 \usepackage{scrpage2}
 \pagestyle{scrheadings}
 \manualmark
-
+\graphicspath{{./figure/}}
 \ifoot[DTU Wind Energy E-0018]{DTU Wind Energy E-0018}
 
+% Counters
+\usepackage{totcount}
+\newtotcounter{citnum} % Citations 
+\def\oldbibitem{} \let\oldbibitem=\bibitem
+\def\bibitem{\stepcounter{citnum}\oldbibitem}
+
+\newtotcounter{fignum} % Figures
+\def\oldfigure{} \let\oldfigure=\figure
+\def\figure{\stepcounter{fignum}\oldfigure}
+
+\newtotcounter{tablenum} % Tables
+\def\oldtable{} \let\oldtable=\table
+\def\table{\stepcounter{tablenum}\oldtable}
+
+\regtotcounter{page} % Pages
 
 \begin{document}
     \include{frontpage}

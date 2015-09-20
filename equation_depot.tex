@@ -1,4 +1,6 @@
-
+%
+% Equations used for the Inkscape diagrams
+%
 
 $\Omega_k$
 
@@ -52,8 +54,8 @@ Q_{g,ref,k}^{full} &= P_0/\Omega_0 \;\;\; \mbox{Constant torque control}
 \end{align*}\vspace{-1.5\belowdisplayskip}}}
 
 \fbox{\parbox{80mm}{\vspace{-\abovedisplayskip} \begin{align*}
-Q_{g,min,k}^{part} &= \min \left( \sigma_{min,k} \, K \bar \Omega_k^2 , K \Omega_{max_1}^2 \right)\\
-Q_{g,max,k}^{part} &= \max \left( \left( 1-\sigma_{max,k}\right) K \bar \Omega_k^2 + \sigma_{max,k} \, Q_{g,ref,k}^{full}, \, K \Omega_{min_2}^2 \right)
+Q_{g,min,k}^{part}&=\min{\bigl(\sigma_{min,k}(K\bar\Omega_k^2-K_{dot}\dot{\bar{\Omega}}),K\Omega^2_{max_1}\bigr)}\\
+Q_{g,max,k}^{part}&=\max{\bigl((1-\sigma_{max,k})(K\bar\Omega_k^2-K_{dot}\dot{\bar{\Omega}})+\sigma_{max,k}Q_{g,ref,k}^{full},K\Omega^2_{min_2}\bigr)}
 \end{align*}\vspace{-1.5\belowdisplayskip}}}
 
 \fbox{\parbox{50mm}{\vspace{-\abovedisplayskip} \begin{align*}
@@ -81,6 +83,10 @@ Q_{g,max,k} &= \left(1-\sigma_{\theta,k}\right) Q_{g,max,k}^{part} + \sigma_{\th
 
 \fbox{$Q_{dmp,k} = k_{dmp} \Omega_{d,k}$}
 
+\fbox{$Q_{dmp, k} = f_{dmp}(k_{dtd}, \omega_{dt}, \omega_{n, dtd}, \zeta_{bp, dtd}, \zeta_{n, dtd}, t_{d, dtd}; \Omega_k, \Omega_{k-1},\Omega_{k-2})$}
+
+\fbox{$\theta_{dmp, k} = f(k_{td}, \omega_{bp, td}, \omega_{n, td}, \zeta_{bp, td}, \zeta_{n, td}, t_{d, td}; a_k, a_{k-1}, a_{k-2})$}
+
 \fbox{$\Omega_{set,k} = \left\{ \begin{array}{l} \Omega_{min} \;\;\mbox{for} \;\; \Omega_k < \frac12(\Omega_{min} + \Omega_0) \\ \Omega_0 \;\;\;\;\;\; \mbox{otherwise} \end{array} \right.$}
 
 \fbox{$Q_{ref,k} = Q_{PID,k} + Q_{dmp,k}$}
@@ -105,9 +111,10 @@ $Q_{ref,k}$
 
 \fbox{$\theta_{I,k-1} = \theta_{ref,k-1} - \theta_{P,k-1} - \theta_{D,k-1} $}
 
-
-\fbox{$\eta_{A,k}=\frac1{ 1 +\bar \theta_{m,k}/K_{1} + \bar \theta_{m,k}^2/K_{2} }$}
-
+\fbox{\parbox{50mm}{\vspace{-\abovedisplayskip} \begin{align*}
+\eta_{A,k}&=\frac1{ 1 +\bar \theta_{m,k}/K_{1} + \bar \theta_{m,k}^2/K_{2} }\\
+\eta_{k,\Omega} &= 1+\bar \theta_{m, k}/K_{1, \Omega}+\bar \theta_{m, k}^2/K_{2, \Omega}
+\end{align*}\vspace{-1.5\belowdisplayskip}}}
 
 \fbox{$\eta_{nl,k}=1+\frac{e_{\Omega,k}^2}{\left(\Omega_2-\Omega_0\right)^2}$}
 
@@ -115,3 +122,21 @@ $Q_{ref,k}$
 \fbox{$\eta_k=\eta_{A,k} \eta_{nl,k}$}
 
 $\theta_{ref,k}$
+
+\fbox{\parbox{50mm}{\vspace{-\abovedisplayskip} \begin{align*}
+k_{P} &= k_{P,0}+k_{P,0,\Omega}\eta_{k, \Omega}\\
+k_{D} &= k_{D,0}\\
+k_{I} &= k_{I,0}
+\end{align*}\vspace{-1.5\belowdisplayskip}}}
+
+
+\fbox{$y_{k} = f(\zeta,\omega;y_{k-1},y_{k-2},u_{k}, u_{k-1}, u_{k-2})$}
+\fbox{$y_{k} = f(\zeta_1,\zeta_2,\omega;y_{k-1},y_{k-2},u_{k}, u_{k-1}, u_{k-2})$}
+\fbox{$y_{k} = f(t_d; u_{k}, u_{k-1}, u_{k-2},... u_n)$}
+
+
+\fbox{$\theta_{ref, k} = \theta_{PID, k} + \theta_{dmp, k}$}
+
+% Exclusion zone
+\fbox{$Q_{g,min,k}, Q_{g,max,k},e_{Q,k} = f(Q_{g,min,k}, Q_{g,max,k},e_{Q,k},Q_{g,min,k}^{part},Q_{g,max,k}^{part})$}
+

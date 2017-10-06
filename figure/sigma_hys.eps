@@ -1,9 +1,9 @@
 %!PS-Adobe-2.0 EPSF-2.0
-%%Title: gainsch.eps
-%%Creator: gnuplot 4.4 patchlevel 3
-%%CreationDate: Sat Jan 26 13:17:52 2013
+%%Title: sigma_hys.eps
+%%Creator: gnuplot 4.6 patchlevel 5
+%%CreationDate: Mon Sep 25 15:14:39 2017
 %%DocumentFonts: (atend)
-%%BoundingBox: 50 50 410 201
+%%BoundingBox: 50 50 266 125
 %%EndComments
 %%BeginProlog
 /gnudict 256 dict def
@@ -20,12 +20,14 @@ gnudict begin
 /Level1 false def
 /Rounded false def
 /ClipToBoundingBox false def
+/SuppressPDFMark false def
 /TransparentPatterns false def
 /gnulinewidth 5.000 def
 /userlinewidth gnulinewidth def
 /Gamma 1.0 def
+/BackgroundColor {-1.000 -1.000 -1.000} def
 %
-/vshift -46 def
+/vshift -40 def
 /dl1 {
   10.0 Dashlength mul mul
   Rounded { currentlinewidth 0.75 mul sub dup 0 le { pop 0.01 } if } if
@@ -38,30 +40,14 @@ gnudict begin
 /vpt_ 31.5 def
 /hpt hpt_ def
 /vpt vpt_ def
-Level1 {} {
-/SDict 10 dict def
-systemdict /pdfmark known not {
-  userdict /pdfmark systemdict /cleartomark get put
-} if
-SDict begin [
-  /Title (gainsch.eps)
-  /Subject (gnuplot plot)
-  /Creator (gnuplot 4.4 patchlevel 3)
-  /Author (mhha)
-%  /Producer (gnuplot)
-%  /Keywords ()
-  /CreationDate (Sat Jan 26 13:17:52 2013)
-  /DOCINFO pdfmark
-end
-} ifelse
 /doclip {
   ClipToBoundingBox {
-    newpath 50 50 moveto 410 50 lineto 410 201 lineto 50 201 lineto closepath
+    newpath 50 50 moveto 266 50 lineto 266 125 lineto 50 125 lineto closepath
     clip
   } if
 } def
 %
-% Gnuplot Prolog Version 4.4 (August 2010)
+% Gnuplot Prolog Version 4.6 (September 2012)
 %
 %/SuppressPDFMark true def
 %
@@ -328,7 +314,8 @@ end
 /PatternFill {gsave /PFa [ 9 2 roll ] def
   PFa 0 get PFa 2 get 2 div add PFa 1 get PFa 3 get 2 div add translate
   PFa 2 get -2 div PFa 3 get -2 div PFa 2 get PFa 3 get Rec
-  gsave 1 setgray fill grestore clip
+  TransparentPatterns {} {gsave 1 setgray fill grestore} ifelse
+  clip
   currentlinewidth 0.5 mul setlinewidth
   /PFs PFa 2 get dup mul PFa 3 get dup mul add sqrt def
   0 0 M PFa 5 get rotate PFs -2 div dup translate
@@ -433,8 +420,26 @@ Level1 {Level1PatternFill} {Level2PatternFill} ifelse
 /Symbol-Oblique /Symbol findfont [1 0 .167 1 0 0] makefont
 dup length dict begin {1 index /FID eq {pop pop} {def} ifelse} forall
 currentdict end definefont pop
+Level1 SuppressPDFMark or 
+{} {
+/SDict 10 dict def
+systemdict /pdfmark known not {
+  userdict /pdfmark systemdict /cleartomark get put
+} if
+SDict begin [
+  /Title (sigma_hys.eps)
+  /Subject (gnuplot plot)
+  /Creator (gnuplot 4.6 patchlevel 5)
+  /Author (mhha)
+%  /Producer (gnuplot)
+%  /Keywords ()
+  /CreationDate (Mon Sep 25 15:14:39 2017)
+  /DOCINFO pdfmark
+end
+} ifelse
 end
 %%EndProlog
+%%Page: 1 1
 gnudict begin
 gsave
 doclip
@@ -442,376 +447,1211 @@ doclip
 0.050 0.050 scale
 0 setgray
 newpath
-(Helvetica) findfont 140 scalefont setfont
+(Helvetica) findfont 120 scalefont setfont
+BackgroundColor 0 lt 3 1 roll 0 lt exch 0 lt or or not {BackgroundColor C 1.000 0 0 4320.00 1512.00 BoxColFill} if
 1.000 UL
 LTb
-518 448 M
+LCb setrgbcolor
+588 384 M
 63 0 V
-6366 0 R
+3452 0 R
 -63 0 V
-434 448 M
-(-6) Rshow
+516 384 M
+(-0.5) Rshow
 1.000 UL
 LTb
-518 792 M
+LCb setrgbcolor
+588 630 M
 63 0 V
-6366 0 R
+3452 0 R
 -63 0 V
-434 792 M
-(-5) Rshow
-1.000 UL
-LTb
-518 1136 M
-63 0 V
-6366 0 R
--63 0 V
--6450 0 R
-(-4) Rshow
-1.000 UL
-LTb
-518 1480 M
-63 0 V
-6366 0 R
--63 0 V
--6450 0 R
-(-3) Rshow
-1.000 UL
-LTb
-518 1823 M
-63 0 V
-6366 0 R
--63 0 V
--6450 0 R
-(-2) Rshow
-1.000 UL
-LTb
-518 2167 M
-63 0 V
-6366 0 R
--63 0 V
--6450 0 R
-(-1) Rshow
-1.000 UL
-LTb
-518 2511 M
-63 0 V
-6366 0 R
--63 0 V
--6450 0 R
+516 630 M
 ( 0) Rshow
 1.000 UL
 LTb
-518 2855 M
+LCb setrgbcolor
+588 876 M
 63 0 V
-6366 0 R
+3452 0 R
 -63 0 V
--6450 0 R
+516 876 M
+( 0.5) Rshow
+1.000 UL
+LTb
+LCb setrgbcolor
+588 1122 M
+63 0 V
+3452 0 R
+-63 0 V
+-3524 0 R
 ( 1) Rshow
 1.000 UL
 LTb
-518 448 M
+LCb setrgbcolor
+588 1368 M
+63 0 V
+3452 0 R
+-63 0 V
+-3524 0 R
+( 1.5) Rshow
+1.000 UL
+LTb
+LCb setrgbcolor
+588 384 M
 0 63 V
-0 2344 R
+0 921 R
 0 -63 V
-518 308 M
+588 264 M
+(-1) Cshow
+1.000 UL
+LTb
+LCb setrgbcolor
+1027 384 M
+0 63 V
+0 921 R
+0 -63 V
+0 -1041 R
+(-0.5) Cshow
+1.000 UL
+LTb
+LCb setrgbcolor
+1467 384 M
+0 63 V
+0 921 R
+0 -63 V
+0 -1041 R
 ( 0) Cshow
 1.000 UL
 LTb
-1804 448 M
+LCb setrgbcolor
+1906 384 M
 0 63 V
-0 2344 R
+0 921 R
 0 -63 V
-0 -2484 R
-( 5) Cshow
+0 -1041 R
+( 0.5) Cshow
 1.000 UL
 LTb
-3090 448 M
+LCb setrgbcolor
+2346 384 M
 0 63 V
-0 2344 R
+0 921 R
 0 -63 V
-0 -2484 R
-( 10) Cshow
+0 -1041 R
+( 1) Cshow
 1.000 UL
 LTb
-4375 448 M
+LCb setrgbcolor
+2785 384 M
 0 63 V
-0 2344 R
+0 921 R
 0 -63 V
-0 -2484 R
-( 15) Cshow
+0 -1041 R
+( 1.5) Cshow
 1.000 UL
 LTb
-5661 448 M
+LCb setrgbcolor
+3224 384 M
 0 63 V
-0 2344 R
+0 921 R
 0 -63 V
-0 -2484 R
-( 20) Cshow
+0 -1041 R
+( 2) Cshow
 1.000 UL
 LTb
-6947 448 M
+LCb setrgbcolor
+3664 384 M
 0 63 V
-0 2344 R
+0 921 R
 0 -63 V
-0 -2484 R
-( 25) Cshow
+0 -1041 R
+( 2.5) Cshow
 1.000 UL
 LTb
+LCb setrgbcolor
+4103 384 M
+0 63 V
+0 921 R
+0 -63 V
+0 -1041 R
+( 3) Cshow
 1.000 UL
 LTb
-518 2855 N
-518 448 L
-6429 0 V
-0 2407 V
--6429 0 V
+LCb setrgbcolor
+1.000 UL
+LTb
+LCb setrgbcolor
+588 1368 N
+0 -984 V
+3515 0 V
+0 984 V
+-3515 0 V
 Z stroke
 LCb setrgbcolor
-112 1651 M
+96 876 M
 currentpoint gsave translate -270 rotate 0 0 M
-(Aerodynamic torque gain [MNm/deg]) Cshow
+(Switch value [-]) Cshow
 grestore
 LTb
 LCb setrgbcolor
-3732 98 M
-(Pitch angle [deg]) Cshow
+2345 84 M
+(Mean pitch angle [deg]) Cshow
 LTb
 1.000 UP
 1.000 UL
 LTb
+LCb setrgbcolor
+1349 842 M
+30 -114 V
+30 114 V
+-30 280 R
+0 -394 V
+stroke
+LTb
+LCb setrgbcolor
+2501 812 M
+108 64 V
+-125 -1 V
+2082 728 M
+527 148 V
+stroke
+LTb
+LCb setrgbcolor
 % Begin plot #1
-1.000 UP
 2.000 UL
 LT0
-LCb setrgbcolor
-6296 2722 M
-(Gain based on CP surface including blade deformation) Rshow
-LT0
-6380 2722 M
-399 0 V
-1272 2511 M
--117 0 V
--189 1 V
--227 -1 V
-518 2501 L
-0 -21 V
-0 -7 V
-0 -6 V
-1703 2252 L
-670 -158 V
-493 -119 V
-415 -105 V
-372 -92 V
-345 -91 V
-324 -87 V
-307 -81 V
-295 -79 V
-285 -79 V
-275 -77 V
-267 -76 V
-261 -73 V
-253 -72 V
-1272 2511 Circle
-1155 2511 Circle
-966 2512 Circle
-739 2511 Circle
-518 2501 Circle
-518 2480 Circle
-518 2473 Circle
-518 2467 Circle
-1703 2252 Circle
-2373 2094 Circle
-2866 1975 Circle
-3281 1870 Circle
-3653 1778 Circle
-3998 1687 Circle
-4322 1600 Circle
-4629 1519 Circle
-4924 1440 Circle
-5209 1361 Circle
-5484 1284 Circle
-5751 1208 Circle
-6012 1135 Circle
-6265 1063 Circle
-6579 2722 Circle
+LC0 setrgbcolor
+/Helvetica findfont 120 scalefont setfont
+/vshift -40 def
+588 630 M
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+stroke 1321 630 M
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 1 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 1 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+stroke 2053 794 M
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 1 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 1 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 1 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+stroke 2786 999 M
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 1 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+7 2 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+stroke 3518 1122 M
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
 % End plot #1
 % Begin plot #2
-1.000 UP
-2.000 UL
+stroke
 LT1
-LCb setrgbcolor
-6296 2582 M
-(Gain based on constant induced velocities and no blade deformation) Rshow
-LT1
-6380 2582 M
-399 0 V
-1272 2312 M
--117 -71 V
-966 2165 L
-739 2084 L
-518 2004 L
-0 -86 V
-0 -137 V
-0 -149 V
-1703 1521 L
-670 -46 V
-493 -60 V
-415 -51 V
-372 -45 V
-345 -54 V
-324 -56 V
-307 -56 V
-295 -58 V
-285 -60 V
-275 -62 V
-267 -62 V
-261 -54 V
-253 -60 V
-1272 2312 Circle
-1155 2241 Circle
-966 2165 Circle
-739 2084 Circle
-518 2004 Circle
-518 1918 Circle
-518 1781 Circle
-518 1632 Circle
-1703 1521 Circle
-2373 1475 Circle
-2866 1415 Circle
-3281 1364 Circle
-3653 1319 Circle
-3998 1265 Circle
-4322 1209 Circle
-4629 1153 Circle
-4924 1095 Circle
-5209 1035 Circle
-5484 973 Circle
-5751 911 Circle
-6012 857 Circle
-6265 797 Circle
-6579 2582 Circle
+LC1 setrgbcolor
+/Helvetica findfont 120 scalefont setfont
+588 630 M
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+stroke 1321 630 M
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 99 V
+7 393 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+stroke 2053 1122 M
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+stroke 2786 1122 M
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+stroke 3518 1122 M
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+8 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
+7 0 V
 % End plot #2
-% Begin plot #3
-2.000 UL
-LT2
-LCb setrgbcolor
-6296 2442 M
-(Quadratic curve fit) Rshow
-LT2
-6380 2442 M
-399 0 V
-518 1575 M
-65 -2 V
-65 -1 V
-65 -2 V
-65 -2 V
-65 -2 V
-65 -2 V
-65 -2 V
-65 -3 V
-64 -2 V
-65 -3 V
-65 -3 V
-65 -3 V
-65 -4 V
-65 -3 V
-65 -4 V
-65 -4 V
-65 -4 V
-65 -4 V
-65 -5 V
-65 -4 V
-65 -5 V
-65 -5 V
-65 -5 V
-65 -5 V
-64 -6 V
-65 -5 V
-65 -6 V
-65 -6 V
-65 -6 V
-65 -6 V
-65 -7 V
-65 -7 V
-65 -6 V
-65 -7 V
-65 -8 V
-65 -7 V
-65 -7 V
-65 -8 V
-65 -8 V
-65 -8 V
-65 -8 V
-64 -9 V
-65 -8 V
-65 -9 V
-65 -9 V
-65 -9 V
-65 -9 V
-65 -9 V
-65 -10 V
-65 -10 V
-65 -10 V
-65 -10 V
-65 -10 V
-65 -10 V
-65 -11 V
-65 -11 V
-65 -11 V
-64 -11 V
-65 -11 V
-65 -12 V
-65 -11 V
-65 -12 V
-65 -12 V
-65 -12 V
-65 -13 V
-65 -12 V
-65 -13 V
-65 -13 V
-65 -13 V
-65 -13 V
-65 -13 V
-65 -14 V
-65 -14 V
-65 -13 V
-64 -15 V
-65 -14 V
-65 -14 V
-65 -15 V
-65 -14 V
-65 -15 V
-65 -15 V
-65 -16 V
-65 -15 V
-65 -16 V
-65 -16 V
-65 -16 V
-65 -16 V
-65 -16 V
-65 -16 V
-65 -17 V
-64 -17 V
-65 -17 V
-65 -17 V
-65 -17 V
-65 -18 V
-65 -18 V
-65 -17 V
-65 -19 V
-65 -18 V
-% End plot #3
 stroke
 1.000 UL
 LTb
-518 2855 N
-518 448 L
-6429 0 V
-0 2407 V
--6429 0 V
+LCb setrgbcolor
+588 1368 N
+0 -984 V
+3515 0 V
+0 984 V
+-3515 0 V
 Z stroke
 1.000 UP
 1.000 UL
 LTb
+LCb setrgbcolor
 stroke
 grestore
 end

@@ -1,13 +1,5 @@
 \appendix
-\chapter{Source code} \label{ch:source}
 
-%This appendix contains the source of the controller as given by revision no. 6 to the SVN repository
-The source code of the Basic DTU Wind Energy controller can be found in the GitHub repository 
-\begin{verbatim}???\end{verbatim}
-%There are two files, risoe\_controller.f90 and risoe\_controller\_fcns.f90 in this Fortran90 code. This type2 DLL for HAWC2 has been compiled with Intel Fortran 13.0.
-
-
-\clearpage
 \chapter{Discrete filters} \label{ch:filters}
 
 This appendix contains the derivations of the discrete filters and a test of their validity. Some of the parameters of the filters are hardcoded in the current implementation as shown in the previous appendix. The values of these hardcoded parameters are repeated herein.
@@ -18,7 +10,7 @@ In continuous form the first order low-pass filter can be written as
 \begin{equation}\label{e:f1cont}
 \dot{\bar x} + \tau \bar x = \tau x
 \end{equation}
-where $x=x(t)$ is the original signal, $\bar x(t)$ is the filtered signal, $\tau$ is the user-defined time constant of the filter, and $\dot{(\,)}=\d/dt$ denotes the time derivative. The discrete first order low-pass filter used in the controller is derived from this continuous formulation by approximating the states and their time derivatives as an average based on the previous and current step:
+where $x=x(t)$ is the original signal, $\bar x(t)$ is the filtered signal, $\tau$ is the user-defined time constant of the filter, and $\dot{(\,)}=d/dt$ denotes the time derivative. The discrete first order low-pass filter used in the controller is derived from this continuous formulation by approximating the states and their time derivatives as an average based on the previous and current step:
 \begin{equation}\label{e:1storder}
 x(t)\approx \frac{x_k+x_{k-1}}2 \;\;\;\;\mbox{and} \;\;\;\;\dot x(t)\approx \frac{x_k-x_{k-1}}{\Delta t}
 \end{equation}

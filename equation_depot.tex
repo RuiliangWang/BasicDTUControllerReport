@@ -112,8 +112,8 @@ $Q_{ref,k}$
 \fbox{$\theta_{I,k-1} = \theta_{ref,k-1} - \theta_{P,k-1} - \theta_{D,k-1} $}
 
 \fbox{\parbox{50mm}{\vspace{-\abovedisplayskip} \begin{align*}
-\eta_{A,k}&=\frac1{ 1 +\bar \theta_{m,k}/K_{1} + \bar \theta_{m,k}^2/K_{2} }\\
-\eta_{k,\Omega} &= 1+\bar \theta_{m, k}/K_{1, \Omega}+\bar \theta_{m, k}^2/K_{2, \Omega}
+\eta_{A,k}&=\left( 1 +\bar \theta_{m,k}/K_{1} + \bar \theta_{m,k}^2/K_{2} \right)^{-1} \\
+\eta_{\Omega,k} &= 1+\bar \theta_{m,k}/K_{\Omega 1}+\bar \theta_{m,k}^2/K_{\Omega 2}
 \end{align*}\vspace{-1.5\belowdisplayskip}}}
 
 \fbox{$\eta_{nl,k}=1+\frac{e_{\Omega,k}^2}{\left(\Omega_2-\Omega_0\right)^2}$}
@@ -123,11 +123,7 @@ $Q_{ref,k}$
 
 $\theta_{ref,k}$
 
-\fbox{\parbox{50mm}{\vspace{-\abovedisplayskip} \begin{align*}
-k_{P} &= k_{P,0}+k_{P,0,\Omega}\eta_{k, \Omega}\\
-k_{D} &= k_{D,0}\\
-k_{I} &= k_{I,0}
-\end{align*}\vspace{-1.5\belowdisplayskip}}}
+\fbox{$k_{P} = k_{P0} +k_{P0,\Omega} \eta_{\Omega,k}$}
 
 
 \fbox{$y_{k} = f(\zeta,\omega;y_{k-1},y_{k-2},u_{k}, u_{k-1}, u_{k-2})$}

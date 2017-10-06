@@ -1,4 +1,21 @@
-\chapter{Simulations of DTU 10~MW RWT}
+\chapter{Simulations of DTU 10~MW RWT (new and more tests should be run and included here)}
+
+\section{Wind steps}
+
+...
+
+\section{Start-up}
+
+
+...
+
+
+\section{Shut-down}
+
+...
+
+\section{Normal operation (these old runs should be repeated)}
+
 
 Figure~\ref{f:4ms}~--~\ref{f:24ms} shows selected signals from IEC NTM simulations with HAWC2 of the class 1A DTU 10~MW RWT at 4, 8, 12, 16, 20, and 24~m/s. All simulations are only meant as an example of the controller performance because they are performed using an earlier version of the DTU 10~MW RWT than the published one. The plots include the initial transients. Comments to simulations are given in the captions.
 
@@ -16,30 +33,33 @@ Figure~\ref{f:4ms}~--~\ref{f:24ms} shows selected signals from IEC NTM simulatio
 
 
 \begin{figure}[t]
-\centerline{\epsfig{figure=sim12ms.eps,width=0.99\textwidth} }
+\centerline{\epsfig{figure=sim12ms.eps,width=0.95\textwidth} }
 \caption{Selected signals from IEC NTM simulation of the class 1A DTU 10~MW RWT at 12~m/s. At this close to rated wind speeds, the turbine is starting to produce full power. During the transients, the pitch controller controls the rotor speed and the larger-than-minimum pitch results in a switch value of 1, whereby the torque reference is set to constant power control. Around 200~s, the wind speed has lowered, resulting in a lowering rotational speed, the pitch controller lowers the pitch angle, and eventually the switch goes to zero, i.e., partial load operation. \label{f:12ms}}
 \end{figure}
 
 
 \begin{figure}[t]
-\centerline{\epsfig{figure=sim16ms.eps,width=0.99\textwidth} }
+\centerline{\epsfig{figure=sim16ms.eps,width=0.95\textwidth} }
 \caption{Selected signals from IEC NTM simulation of the class 1A DTU 10~MW RWT at 16~m/s. The turbine stays in full load operation. \label{f:16ms}}
 \end{figure}
 
 
 \begin{figure}[t]
-\centerline{\epsfig{figure=sim20ms.eps,width=0.99\textwidth} }
+\centerline{\epsfig{figure=sim20ms.eps,width=0.95\textwidth} }
 \caption{Selected signals from IEC NTM simulation of the class 1A DTU 10~MW RWT at 20~m/s. The turbine stays in full load operation. \label{f:20ms}}
 \end{figure}
 
 
 \begin{figure}[t]
-\centerline{\epsfig{figure=sim24ms.eps,width=0.99\textwidth} }
+\centerline{\epsfig{figure=sim24ms.eps,width=0.95\textwidth} }
 \caption{Selected signals from IEC NTM simulation of the class 1A DTU 10~MW RWT at 24~m/s. The turbine stays in full load operation. \label{f:24ms}}
 \end{figure}
 
+\clearpage
 
-\begin{figure}[!t]
+\section{Drivetrain damper functionality (this run should be repeated)}
+
+\begin{figure}[b]
 \begin{center}
 \parbox{0.9\columnwidth}{\mbox{\includegraphics[keepaspectratio=true,width=0.9\columnwidth]{DTD_rotorspeed}}}\\
 \parbox{0.9\columnwidth}{\mbox{\includegraphics[keepaspectratio=true,width=0.9\columnwidth]{DTD_torque}}}\\
@@ -48,7 +68,11 @@ Figure~\ref{f:4ms}~--~\ref{f:24ms} shows selected signals from IEC NTM simulatio
 \end{center}
 \end{figure}
 
-\begin{figure}[t]
+\clearpage
+
+\section{Tower damper functionality (this run should be repeated)}
+
+\begin{figure}[b]
 \begin{center}
 \parbox{0.9\columnwidth}{\mbox{\includegraphics[keepaspectratio=true,width=0.9\columnwidth]{TD_tower}}}\\
 \parbox{0.9\columnwidth}{\mbox{\includegraphics[keepaspectratio=true,width=0.9\columnwidth]{TD_tower_psd}}}
@@ -56,7 +80,11 @@ Figure~\ref{f:4ms}~--~\ref{f:24ms} shows selected signals from IEC NTM simulatio
 \end{center}
 \end{figure}
 
-\begin{figure}[!t]
+\clearpage
+
+\section{Exclusion zone functionality (this run should be repeated)}
+
+\begin{figure}[b]
 \begin{center}
 \parbox{0.9\columnwidth}{\mbox{\includegraphics[keepaspectratio=true,width=0.9\columnwidth]{EZ_windspeed}}}\\
 \parbox{0.9\columnwidth}{\mbox{\includegraphics[keepaspectratio=true,width=0.9\columnwidth]{EZ_rotorspeed}}}\\
@@ -65,7 +93,11 @@ Figure~\ref{f:4ms}~--~\ref{f:24ms} shows selected signals from IEC NTM simulatio
 \end{center}
 \end{figure}
 
-\begin{figure}[!t]
+\clearpage
+
+\section{Storm control functionality (this run should be repeated)}
+
+\begin{figure}[b]
 \begin{center}
 \parbox{0.9\columnwidth}{\mbox{\includegraphics[keepaspectratio=true,width=0.9\columnwidth]{Storm_windspeed}}}\\
 \parbox{0.9\columnwidth}{\mbox{\includegraphics[keepaspectratio=true,width=0.9\columnwidth]{Storm_rotorspeed}}}\\
